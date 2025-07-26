@@ -1,19 +1,10 @@
+# app.py
+
 import os
 import streamlit as st
 import pandas as pd
 from joblib import load
-from sklearn.base import BaseEstimator, TransformerMixin
-
-# ----------------------------
-# Custom Transformer Definition
-# ----------------------------
-class TotalVisitingAdder(BaseEstimator, TransformerMixin):
-    def fit(self, X, y=None):
-        return self
-    def transform(self, X):
-        X = X.copy()
-        X['Total_visiting'] = X['NumberOfPersonVisiting'] + X['NumberOfChildrenVisiting']
-        return X
+from custom_transformers import TotalVisitingAdder  # ✅ Import custom transformer
 
 # ----------------------------
 # Load the Model Pipeline
@@ -85,6 +76,9 @@ input_df = user_input_features()
 # ----------------------------
 if st.button('🔮 Predict'):
     try:
+        # Optional: apply the transformer manually if it's not baked into the pipeline
+        # input_df = TotalVisitingAdder().transform(input_df)
+
         prediction = model.predict(input_df)[0]
         proba = model.predict_proba(input_df)[0][1]
 
